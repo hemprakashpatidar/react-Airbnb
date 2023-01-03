@@ -50,4 +50,25 @@ const favouriteButtonPros={
     buttonClass: 'button',
     buttonText:''
 }
-export {cardDetails, navDetails, cardImageProp, searchButtonProps, languageButtonPros, favouriteButtonPros}
+const favouriteImageProps={
+    imageSrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiiBAAwQbSpoCULq55HwzqJKTC3GP4UGeUcg&usqp=CAU",
+    id: 'favIcon',
+    imageClass: 'favIcon',
+    width: 20,
+    height: 20
+}
+const languageImageProps={
+    imageSrc: "./AirBnB_files/browser.png",
+    id: 'languageIcon',
+    imageClass: 'languageIcon',
+    width: 20,
+    height: 20
+}
+const searchImageProps={ 
+    imageSrc: "https://cdn.iconscout.com/icon/premium/png-256-thumb/search-url-1086249.png",
+    id: 'searchIcon',
+    imageClass: 'searchIcon',
+    width: 10,
+    height: 10
+}
+export {cardDetails, navDetails, cardImageProp, searchButtonProps, languageButtonPros, favouriteButtonPros, favouriteImageProps, languageImageProps, searchImageProps}

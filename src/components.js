@@ -1,38 +1,32 @@
-import React  from "react"
-import { cardImageProp,searchButtonProps } from "./constants.js";
-import { renderFavourite } from "./index.js";
+import React from "react"
+import { cardDetails, cardImageProp,searchButtonProps, navDetails, favouriteImageProps, languageImageProps, searchImageProps} from "./constants.js";
+import { useState } from "react";
+import "./index.css"
 
+const App = () =>{
+    const [favourite, setFav]=useState([])
+    const AddToFav = (props) =>{
+        if (props.isFavourite==false){
+            setFav((temp) => [...temp, props])
+        }
+        else{
+            setFav((temp) => temp.filter(value => value.id != props.id))
+        }
+    };
+    const renderFav = (props) =>{
+       showFavCards(CardComponent(favourite,AddToFav))
+    }
+    const cards=CardComponent(cardDetails,AddToFav)
+    const [cardList, showFavCards] =useState(cards)
 
-const DivComponent = (props) => {
-    return React.createElement(
-        "div",
-        { 
-            id: props.id, 
-            className: props.class
-        },
-            props.text
-        );
-}
-const ImageComponent = (props) => {
-    return React.createElement("img",
-    {
-        src: props.imageSrc, 
-        id: props.id, 
-        className: props.imageClass, 
-        width: props.width, 
-        height:props.height
-    })
-}
-const ButtonComponent = (props) => {
-    return React.createElement('button',
-    {
-        id: props.buttonID,
-        className: props.buttonClass
-    },
-        props.buttonText
+    return (
+        <div>
+            <div  id="header_container">{HeaderComponent(renderFav)}</div>
+            <div class="nav-container" id="nav-container">{NavBarComponent(navDetails)}</div>
+            <div class="cardContainer" id="cardContainer">{cardList} </div>
+        </div>
     )
 }
-
 
 const NavComponent = (props) => {
     const imageProps={
@@ -45,8 +39,8 @@ const NavComponent = (props) => {
     return(
             <button className="navButton">
                 <div className="iconContainer" id={props.id}>
-                    {ImageComponent(imageProps)}
-                    {DivComponent({id: props.id, class: 'navName',text: props.iconName})}
+                <img src={imageProps.imageSrc} className={imageProps.imageClass} id={imageProps.id} width={imageProps.width} height={imageProps.height}/>
+                    <div id={props.id} className="navName">{props.iconName}</div>
                 </div>
             </button>
     )
@@ -59,7 +53,17 @@ const NavBarComponent = (props) => {
     return (option)
 }
 
-const CardItemComponent = (props) => {
+const CardItemComponent = (props, AddToFav) => {
+    const handleEvent =(props)=>{
+        if (props.isFavourite==false){
+            AddToFav(props)
+            props.isFavourite=true
+        }
+        else{
+            AddToFav(props)
+            props.isFavourite=false
+        }
+    }
     const imageProps={ 
         imageSrc: props.imageSrc,
         id: cardImageProp.id,
@@ -80,23 +84,23 @@ const CardItemComponent = (props) => {
 
    return (
     <div id={props.id} className="card">
-        {ImageComponent(imageProps)}
-        {ButtonComponent(buttonProps)}
+        <img src={imageProps.imageSrc} className={imageProps.imageClass} id={imageProps.id} width={imageProps.width} height={imageProps.height}/>
+        <button id={buttonProps.buttonID} className={buttonProps.buttonClass} onClick={() => handleEvent(props)}>{buttonProps.buttonText}</button>
         <div id="name_rating" className="cardItem">
-            {DivComponent({id: 'name', class: 'name', text: props.description.name})}
-            {DivComponent({id: 'rating', class: 'rating', text: props.description.rating})}
+            <div id="name" className="name">{props.description.name}</div>
+            <div id="rating" className="rating">{props.description.rating}</div>
         </div>
-        {DivComponent({id:'distance', class: 'distance',text: props.description.distance})}
-        {DivComponent({id:'date', class: 'date',text: props.description.date})}
-        {DivComponent({id:'rate', class: 'rate',text: props.description.rate})}
+        <div id="distance" className="distance">{props.description.distance}</div>
+        <div id="date" className="date">{props.description.date}</div>
+        <div id="rate" className="rate">{props.description.rate}</div>
     </div>
    )
     
 }
 
-const CardComponent = (props) => {
+const CardComponent = (props,AddToFav) => {
     const option=props.map(element => {
-        return CardItemComponent(element)
+        return CardItemComponent(element, AddToFav)
     });
     return (option)
 }
@@ -106,54 +110,33 @@ const LogoComponent = () => {
 }
 
 const SearchBoxComponent = () => {
-    const searchImageProps={ 
-        imageSrc: "https://cdn.iconscout.com/icon/premium/png-256-thumb/search-url-1086249.png",
-        id: 'searchIcon',
-        imageClass: 'searchIcon',
-        width: 10,
-        height: 10
-    }
     return (
         <div id="searchBox" className="searchBar">
-            {ButtonComponent(searchButtonProps[0])}
-            {ButtonComponent(searchButtonProps[1])}
-            {ButtonComponent(searchButtonProps[2])}
+            <button id={searchButtonProps[0].buttonID} className={searchButtonProps[0].buttonClass}>{searchButtonProps[0].buttonText}</button>
+            <button id={searchButtonProps[1].buttonID} className={searchButtonProps[1].buttonClass}>{searchButtonProps[1].buttonText}</button>
+            <button id={searchButtonProps[2].buttonID} className={searchButtonProps[2].buttonClass}>{searchButtonProps[2].buttonText}</button>
             <button id={searchButtonProps[3].buttonID} className={searchButtonProps[3].buttonClass}>
-                {ImageComponent(searchImageProps)}
+                <img src={searchImageProps.imageSrc} className={searchImageProps.imageClass} id={searchImageProps.id} width={searchImageProps.width} height={searchImageProps.height}/>
             </button>
         </div>
     )
 }
 
 const LanguageComponent = () => {
-    const languageImageProps={
-        imageSrc: "./AirBnB_files/browser.png",
-        id: 'languageIcon',
-        imageClass: 'languageIcon',
-        width: 20,
-        height: 20
-    }
     return (
         <div id='language' className="language">
             <button id="languageButton" className="button">
-                {ImageComponent(languageImageProps)}
+            <img src={languageImageProps.imageSrc} className={languageImageProps.imageClass} id={languageImageProps.id} width={languageImageProps.width} height={languageImageProps.height}/>
             </button>
         </div>
     )
 }
 
-const FavouriteComponent = () => {
-    const favouriteImageProps={
-        imageSrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiiBAAwQbSpoCULq55HwzqJKTC3GP4UGeUcg&usqp=CAU",
-        id: 'favIcon',
-        imageClass: 'favIcon',
-        width: 20,
-        height: 20
-    }
+const FavouriteComponent = (props) => { 
     return(
         <div id="favourite" className="favourite">
-        <button id="fvt" className="button" onClick={renderFavourite}>
-            {ImageComponent(favouriteImageProps)}
+        <button id="fvt" className="button" onClick={props}>
+        <img src={favouriteImageProps.imageSrc} className={favouriteImageProps.imageClass} id={favouriteImageProps.id} width={favouriteImageProps.width} height={favouriteImageProps.height}/>
         </button>
     </div>
     )
@@ -162,9 +145,9 @@ const FavouriteComponent = () => {
 const SideBoxComponent = (props) => {
     return (
     <div id="sideBox" className="sideBar">
-        {DivComponent({id: 'home', class: 'home', text: 'airbnb your home'})}
+        <div id="home" className="home">airbnb your home</div>
         {LanguageComponent()}
-        {FavouriteComponent()}
+        {FavouriteComponent(props)}
     </div>)
 }
 
@@ -173,8 +156,8 @@ const HeaderComponent = (props) => {
     <div className="header_container" id="header_item">
         {LogoComponent()}
         {SearchBoxComponent()}
-        {SideBoxComponent()}
+        {SideBoxComponent(props)}
     </div>
     )
 }
-export {NavBarComponent,CardComponent, HeaderComponent}
+export {App}
